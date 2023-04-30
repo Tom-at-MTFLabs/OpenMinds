@@ -1,0 +1,148 @@
+# This example will cycle between 4 different animations on an OLED screen that runs from a ssd1306 library.
+
+from machine import Pin, I2C
+from ssd1306 import SSD1306_I2C
+import time
+import random
+import math
+
+i2c=I2C(1,sda=Pin(14), scl=Pin(15), freq=400000)
+oled = SSD1306_I2C(128, 64, i2c)
+
+WIDTH = 128
+HEIGHT = 64
+
+# Define the cross parameters
+x = WIDTH // 2
+y = HEIGHT // 2
+length = 0
+
+# Define the circle parameters
+cx = WIDTH // 2
+cy = HEIGHT // 2
+radius = 0
+
+def three(oled, speed):
+    # Define the SSD1306 OLED display dimensions
+    WIDTH = 128
+    HEIGHT = 64
+
+    # Clear the screen
+    oled.fill(0)
+
+    # Define the circle parameters
+    x = WIDTH // 2
+    y = HEIGHT // 2
+    radius = 0
+    length = 0
+
+    # Loop to draw the circle
+    start_time = time.time()
+    while time.time() - start_time < 10:
+        # Increase the cross length and circle radius
+        length = (length + 1) % WIDTH
+        radius = (radius + 1) % (WIDTH // 2)
+
+        # Clear the screen
+        oled.fill(0)
+
+        # Draw the cross
+        oled.line(x - length, y, x + length, y, 1)
+        oled.line(x, y - length, x, y + length, 1)
+
+        # Draw the circle
+        oled.ellipse(cx, cy, radius, 20, 10)
+
+        # Update the display
+        oled.show()
+
+        # Pause for a short time
+        time.sleep(0.01)
+            
+
+def two():
+    # Clear the screen
+    oled.fill(0)
+    
+    # Define the circle parameters
+    x = 64
+    y = 32
+    radius = 0
+    
+    # Loop to draw the circle
+    while radius < 80:
+        # Increase the circle radius
+        radius += 2
+    
+        # Draw the circle
+        oled.fill(0)
+        oled.ellipse(x, y, radius, 10, 10)
+        oled.show()
+        oled.ellipse(x, y, radius, 15, 20)
+        time.sleep(0.01)
+        oled.show()
+        oled.ellipse(x, y, radius, 20, 30)
+        time.sleep(0.01)
+        oled.show()
+        oled.ellipse(x, y, radius, 25, 40)
+        time.sleep(0.01)
+        oled.show()
+        oled.ellipse(x, y, radius, 30, 60)
+        time.sleep(0.01)
+        oled.show()
+        oled.ellipse(x, y, radius, 5, 5)
+        time.sleep(0.01)
+
+
+
+def one():
+    # define the x and y offset of the sine wave
+    x_offset = 0
+    y_offset = HEIGHT // 2
+
+    # define the3amplitude and period of the sine wave
+    amplitude = 15
+    period = 27
+
+    # loop to animate the sine wave
+    start_time = time.time()
+    while time.time() - start_time < 5:
+        # clear the screen
+        oled.fill(0)
+
+        # loop through each pixel in the display
+        for x in range(WIDTH):
+            # calculate the y-coordinate of the sine wave at this x-coordinate
+            y = y_offset + int(amplitude * math.sin((x + x_offset) * 2 * math.pi / period))
+
+            # set the pixel at this x,y coordinate to white
+            oled.pixel(x, y, 1)
+
+        # update the display
+        oled.show()
+
+        # increment the x offset to animate the sine wave
+        x_offset += 1
+
+        # reset the x offset if it exceeds the period of the sine wave
+        if x_offset >= period:
+            x_offset = 0
+
+        # pause for a short time between each frame
+        time.sleep_ms(10)
+
+def four():
+    oled.fill(0)
+    oled.show()
+    time.sleep(1)
+    oled.fill(1)
+    oled.show()
+    time.sleep(1)
+    
+animations = [four, one, two, lambda: three(oled, 0.01), four]
+
+# loop to cycle through the animations
+while True:
+    for animation in animations:
+        animation()
+
