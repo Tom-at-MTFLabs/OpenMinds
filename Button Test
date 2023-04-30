@@ -1,0 +1,23 @@
+import machine
+import time
+from machine import Pin
+
+# Set up the onboard LED on GP2
+led_pin = Pin("LED", Pin.OUT)
+
+# Set up the button on GP29
+button_pin = Pin(22, Pin.IN, Pin.PULL_UP)
+
+# Initialize the LED state as off
+led_state = False
+
+# Loop forever
+while True:
+    # Check if the button is pressed
+    if not button_pin.value():
+        # Toggle the LED state
+        led_state = not led_state
+        led_pin.value(led_state)
+        # Wait for a short time to debounce the button
+        time.sleep(0.1)
+
