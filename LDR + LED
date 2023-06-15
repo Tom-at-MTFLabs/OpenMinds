@@ -1,0 +1,39 @@
+import time
+from machine import Pin, ADC
+from neopixel import Neopixel
+
+numpix = 1
+pixels = Neopixel(numpix, 0, 0, "GRB")
+
+yellow = (255, 100, 0)
+orange = (255, 50, 0)
+green = (0, 255, 0)
+blue = (0, 0, 255)
+red = (255, 0, 0)
+white = (255, 255, 255)
+off = (0, 0, 0)
+
+pixels.brightness(50)
+pixels.fill(orange)
+
+ldr_pin = ADC(26)
+
+# Take initial reading
+initial_value = ldr_pin.read_u16()
+
+while True:
+    ldr_value = ldr_pin.read_u16()
+
+    if ldr_value < initial_value * 0.8:
+        pixels.set_pixel(0, red)
+    elif ldr_value < initial_value * 0.9:
+        pixels.set_pixel(0, yellow)
+    elif ldr_value < initial_value * 1.1:
+        pixels.set_pixel(0, green)
+    elif ldr_value < initial_value * 1.2:
+        pixels.set_pixel(0, blue)
+    else:
+        pixels.set_pixel(0, orange)
+
+    pixels.show()
+    time.sleep(1)
