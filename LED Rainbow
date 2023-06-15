@@ -1,0 +1,49 @@
+import time
+from machine import Pin, ADC
+from neopixel import Neopixel
+from math import sin, pi
+
+numpix = 1
+pixels = Neopixel(numpix, 0, 0, "GRB")
+
+pixels.brightness(50)
+pixels.fill((0, 0, 0))  # Start with the LED off
+
+# Function to convert HSV to RGB
+def hsv_to_rgb(h, s, v):
+    if s == 0.0:
+        r = g = b = v
+    else:
+        h = h * 6.0
+        i = int(h)
+        f = h - i
+        p = v * (1.0 - s)
+        q = v * (1.0 - s * f)
+        t = v * (1.0 - s * (1.0 - f))
+        if i == 0:
+            r, g, b = v, t, p
+        elif i == 1:
+            r, g, b = q, v, p
+        elif i == 2:
+            r, g, b = p, v, t
+        elif i == 3:
+            r, g, b = p, q, v
+        elif i == 4:
+            r, g, b = t, p, v
+        elif i == 5:
+            r, g, b = v, p, q
+    return int(r * 255), int(g * 255), int(b * 255)
+
+h = 0.0  # Initial hue value
+
+while True:
+    rgb = hsv_to_rgb(h, 1.0, 1.0)
+    pixels.set_pixel(0, rgb)
+    pixels.show()
+    
+    # Increment the hue value for next iteration
+    h += 0.01
+    if h >= 1.0:
+        h -= 1.0
+
+    time.sleep(0.05)
