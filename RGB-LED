@@ -1,0 +1,38 @@
+##### must include neopixel.py file : https://github.com/blaz-r/pi_pico_neopixel
+
+import time
+from neopixel import Neopixel
+ 
+numpix = 1
+pixels = Neopixel(numpix, 0, 0, "GRB")
+ 
+yellow = (255, 100, 0)
+orange = (255, 50, 0)
+green = (0, 255, 0)
+blue = (0, 0, 255)
+red = (255, 0, 0)
+white = (255,255,255)
+off = (0,0,0)
+ 
+pixels.brightness(50)
+pixels.fill(orange)
+
+while True:
+    pixels.set_pixel(0, red)
+    pixels.show()
+    time.sleep(1)
+    pixels.set_pixel(0, yellow)
+    pixels.show()
+    time.sleep(1)
+    pixels.set_pixel(0, green)
+    pixels.show()
+    time.sleep(1)
+    pixels.set_pixel(0, blue)
+    pixels.show()
+    time.sleep(1)
+    pixels.set_pixel(0, orange)
+    pixels.show()
+    time.sleep(1)
+    pixels.set_pixel(0, white)
+    pixels.show()
+    time.sleep(1)
