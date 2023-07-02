@@ -1,0 +1,39 @@
+from machine import Pin, I2C, ADC
+from ssd1306 import SSD1306_I2C
+import time
+
+i2c = I2C(1, sda=Pin(14), scl=Pin(15), freq=400000)
+oled = SSD1306_I2C(128, 64, i2c)
+
+ldr_pin = ADC(26)
+
+# Clear the screen
+oled.fill(0)
+oled.show()
+
+while True:
+    ldr_value = ldr_pin.read_u16()
+
+    # Clear the screen
+    oled.fill(0)
+
+    # Display LDR reading
+    ldr_text = "LDR"
+    oled.text(ldr_text, 50, 20, 1)
+
+    # Display LDR value
+    ldr_value_text = str(ldr_value)
+    oled.text(ldr_value_text, 50, 40, 1)
+
+    # Display "VALUE:"
+    value_text = "VALUE:"
+    oled.text(value_text, 40, 30, 1)
+
+    # Display the actual value
+    actual_value_text = "{:.2f}".format(ldr_value / 65535.0)
+    oled.text(actual_value_text, 0, 40, 1)
+
+    oled.show()
+
+    time.sleep(0.5)
+
