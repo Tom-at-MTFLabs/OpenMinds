@@ -1,0 +1,67 @@
+import time
+from machine import Pin
+from neopixel import Neopixel
+
+numpix = 1
+pixels = Neopixel(numpix, 0, 0, "GRB")
+
+yellow = (255, 100, 0)
+orange = (255, 50, 0)
+green = (0, 255, 0)
+blue = (0, 0, 255)
+red = (255, 0, 0)
+white = (255, 255, 255)
+off = (0, 0, 0)
+
+pixels.brightness(50)
+pixels.fill(orange)
+
+GPIO_SIG = 15
+
+def measurement_in_cm():
+    print("SeeedStudio Grove Ultrasonic get data and print")
+
+    for _ in range(100):
+        pulse_start, pulse_end = measurement_pulse()
+        distance = calculate_distance(pulse_start, pulse_end)
+        print("Distance: {:.1f} CM".format(distance))
+        update_led_color(distance)
+        time.sleep(0.1)
+
+def measurement_pulse():
+    sig_pin = Pin(GPIO_SIG, Pin.OUT)
+
+    sig_pin.off()
+    time.sleep(0.2)
+    sig_pin.on()
+    time.sleep(0.5)
+    sig_pin.off()
+
+    sig_pin.init(Pin.IN)
+
+    while sig_pin() == 0:
+        pulse_start = time.ticks_us()
+
+    while sig_pin() == 1:
+        pulse_end = time.ticks_us()
+
+    return pulse_start, pulse_end
+
+def calculate_distance(pulse_start, pulse_end):
+    elapsed = pulse_end - pulse_start
+    distance = elapsed * 0.0343 / 2
+    return distance
+
+def update_led_color(distance):
+    if distance < 10:
+        pixels.set_pixel(0, red)
+    elif distance < 20:
+        pixels.set_pixel(0, yellow)
+    elif distance < 30:
+        pixels.set_pixel(0, green)
+    else:
+        pixels.set_pixel(0, blue)
+    pixels.show()
+
+measurement_in_cm()
+
