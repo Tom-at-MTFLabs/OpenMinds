@@ -1,0 +1,12 @@
+from machine import Pin
+import time
+
+vibration_pin = Pin(11, Pin.OUT)
+
+while True:
+    vibration_pin.on()
+    time.sleep(1)
+    vibration_pin.off()
+    time.sleep(1)
+
+  
