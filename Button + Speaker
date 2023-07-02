@@ -1,0 +1,32 @@
+import time
+from machine import Pin, PWM
+
+# Set up the button on GP22
+button_pin = Pin(22, Pin.IN, Pin.PULL_UP)
+
+# Set up the speaker on GP21
+speaker_pin = Pin(21)
+speaker_pwm = PWM(speaker_pin)
+
+# Initialize the speaker state as off
+speaker_state = False
+
+# Function to toggle the speaker state
+def toggle_speaker_state():
+    global speaker_state
+    speaker_state = not speaker_state
+    if speaker_state:
+        speaker_pwm.freq(440)  # Set frequency to 440Hz (A4 note)
+        speaker_pwm.duty_u16(32768)  # Set 50% duty cycle (medium volume)
+    else:
+        speaker_pwm.deinit()  # Turn off the speaker
+
+# Loop forever
+while True:
+    # Check if the button is pressed
+    if not button_pin.value():
+        # Toggle the speaker state
+        toggle_speaker_state()
+        # Wait for a short time to debounce the button
+        time.sleep(0.5)
+
