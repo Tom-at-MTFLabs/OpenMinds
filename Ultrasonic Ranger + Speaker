@@ -1,0 +1,66 @@
+import time
+from machine import Pin, PWM
+
+GPIO_SIG = 15
+
+def measurement_pulse():
+    # Setup the GPIO_SIG as output
+    sig_pin = Pin(GPIO_SIG, Pin.OUT)
+
+    sig_pin.off()
+    time.sleep_us(2)
+    sig_pin.on()
+    time.sleep_us(5)
+    sig_pin.off()
+
+    # Setup GPIO_SIG as input
+    sig_pin.init(Pin.IN)
+
+    # Get duration from Ultrasonic SIG pin
+    while sig_pin() == 0:
+        pulse_start = time.ticks_us()
+
+    while sig_pin() == 1:
+        pulse_end = time.ticks_us()
+
+    return pulse_start, pulse_end
+
+def calculate_distance(pulse_start, pulse_end):
+    elapsed = pulse_end - pulse_start
+    distance = elapsed * 0.0343 / 2  # Calculate distance in centimeters
+    return distance
+
+# Set up the speaker on GP21
+speaker_pin = Pin(21)
+speaker_pwm = PWM(speaker_pin)
+
+# Initialize the speaker state as off
+speaker_state = False
+
+# Function to toggle the speaker state and adjust frequency based on distance
+def toggle_speaker_state(distance):
+    global speaker_state
+    speaker_state = not speaker_state
+    if speaker_state:
+        frequency = 1000 - (distance * 10)  # Adjust frequency based on distance (lower distance = higher frequency)
+        speaker_pwm.freq(int(frequency))  # Set frequency
+        speaker_pwm.duty_u16(32768)  # Set 50% duty cycle (medium volume)
+    else:
+        speaker_pwm.deinit()  # Turn off the speaker
+
+# Loop forever
+while True:
+    pulse_start, pulse_end = measurement_pulse()
+    distance = calculate_distance(pulse_start, pulse_end)
+    print("Distance: {:.1f} CM".format(distance))
+
+    # Check if the distance is within a certain range to activate the speaker
+    if 10 <= distance <= 100:
+        toggle_speaker_state(distance)
+    else:
+        # Turn off the speaker if the distance is outside the range
+        if speaker_state:
+            toggle_speaker_state(distance)
+
+    time.sleep(0.1)
+
