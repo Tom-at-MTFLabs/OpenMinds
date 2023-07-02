@@ -1,0 +1,53 @@
+from machine import Pin, I2C
+import time
+import ssd1306
+
+GPIO_SIG = 15
+
+# Initialize I2C for OLED display
+i2c = I2C(0, scl=Pin(17), sda=Pin(16), freq=400000)
+oled = ssd1306.SSD1306_I2C(128, 64, i2c)
+
+def measurement_in_cm():
+    print("SeeedStudio Grove Ultrasonic get data and print")
+
+    for _ in range(100):
+        pulse_start, pulse_end = measurement_pulse()
+        distance = calculate_distance(pulse_start, pulse_end)
+        print("Distance: {:.1f} CM".format(distance))
+        display_distance(distance)
+        time.sleep(0.1)
+
+def measurement_pulse():
+    sig_pin = Pin(GPIO_SIG, Pin.OUT)
+
+    sig_pin.off()
+    time.sleep(0.2)
+    sig_pin.on()
+    time.sleep(0.5)
+    sig_pin.off()
+
+    sig_pin.init(Pin.IN)
+
+    while sig_pin() == 0:
+        pulse_start = time.ticks_us()
+
+    while sig_pin() == 1:
+        pulse_end = time.ticks_us()
+
+    return pulse_start, pulse_end
+
+def calculate_distance(pulse_start, pulse_end):
+    elapsed = pulse_end - pulse_start
+    distance = elapsed * 0.0343 / 2
+    return distance
+
+def display_distance(distance):
+    oled.fill(0)
+    oled.text("Distance:", 32, 20)
+    oled.text("{:.1f}".format(distance), 40, 30)
+    oled.text("CM", 45, 40)
+    oled.show()
+
+measurement_in_cm()
+
