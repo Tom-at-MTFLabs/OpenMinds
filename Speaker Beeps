@@ -1,0 +1,16 @@
+from machine import Pin, PWM
+import time
+
+speaker_pin = Pin(21)
+speaker_pwm = PWM(speaker_pin)
+
+def play_tone(frequency, duration):
+    speaker_pwm.freq(frequency)
+    speaker_pwm.duty_u16(32768)
+    time.sleep_ms(duration)
+    speaker_pwm.duty_u16(0)
+    time.sleep_ms(50)
+
+while True:
+    play_tone(1000, 100)  # Play a 1kHz tone for 100 milliseconds
+    time.sleep(1)
