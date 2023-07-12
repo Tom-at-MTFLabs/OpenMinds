@@ -2,6 +2,8 @@
 Repo for the OpenMinds Toolkit prototyping board
 
 
+![OpenMindsBoard](https://github.com/Tom-at-MTFLabs/OpenMinds/assets/132015606/89fb9806-1b30-472b-8e1a-9bd47956cfe2)
+
 This breakout board is based on the Raspberry-Pi Pico W board.
 
 Connections include:
