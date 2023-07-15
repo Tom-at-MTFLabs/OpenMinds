@@ -1,0 +1,27 @@
+###### THIS EXAMPLE REQUIRES THE CIRCUITPYTHON UF2 FILE RATHER THAN THE MICROPYTHON.
+
+import time
+import board
+import digitalio
+import usb_hid
+from adafruit_hid.keyboard import Keyboard
+from adafruit_hid.keycode import Keycode
+
+# Define the button pin used for emulating the keystroke
+button_pin = digitalio.DigitalInOut(board.GP22)
+button_pin.direction = digitalio.Direction.INPUT
+button_pin.pull = digitalio.Pull.UP
+
+# Define the keyboard object
+keyboard = Keyboard(usb_hid.devices)
+
+# Define the Keycode for the desired keystroke
+keycode = Keycode.A
+
+# Loop forever
+while True:
+    if not button_pin.value:  # Button is pressed
+        keyboard.press(keycode)  # Emulate the keystroke
+        keyboard.release_all()  # Release the key
+        time.sleep(0.1)
+
