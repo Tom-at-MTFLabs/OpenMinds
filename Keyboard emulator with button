@@ -1,5 +1,4 @@
 ###### THIS EXAMPLE REQUIRES THE CIRCUITPYTHON UF2 FILE RATHER THAN THE MICROPYTHON.
-
 import time
 import board
 import digitalio
@@ -18,10 +17,20 @@ keyboard = Keyboard(usb_hid.devices)
 # Define the Keycode for the desired keystroke
 keycode = Keycode.A
 
+# Variables for debounce
+debounce_delay = 0.05  # Debounce delay in seconds
+last_button_state = True  # Previous button state
+
 # Loop forever
 while True:
-    if not button_pin.value:  # Button is pressed
+    button_state = not button_pin.value  # Invert button state (active low)
+
+    if button_state and not last_button_state:  # Button is pressed and was not previously pressed
         keyboard.press(keycode)  # Emulate the keystroke
         keyboard.release_all()  # Release the key
-        time.sleep(0.1)
+        time.sleep(debounce_delay)  # Debounce delay
+
+    last_button_state = button_state  # Update the last button state
+
+    time.sleep(0.01)  # Small delay to avoid excessive CPU usage
 
