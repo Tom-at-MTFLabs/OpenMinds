@@ -1,0 +1,40 @@
+
+##  Try adjusting the ldr values based on your own readings.
+
+from time import sleep
+from machine import Pin, PWM, ADC
+
+# Initialize PWM for the servo
+servo_pwm = PWM(Pin(18))
+servo_pwm.freq(50)
+
+# Initialize ADC for the LDR
+ldr_adc = ADC(26)
+
+# Define servo position limits
+min_position = 0
+max_position = 180
+
+# Define LDR value range
+min_ldr_value = 300
+max_ldr_value = 600
+
+while True:
+    # Read LDR value
+    ldr_value = ldr_adc.read_u16()
+    
+    # Map LDR value to servo position
+    position_range = max_position - min_position
+    position = int(min_position + (position_range * (ldr_value - min_ldr_value) / (max_ldr_value - min_ldr_value)))
+    
+    # Ensure the position is within limits
+    position = max(min_position, min(max_position, position))
+    
+    # Set servo position
+    servo_pwm.duty_u16(position * 50)  # Convert position to servo duty cycle
+    
+    # Print LDR value to the Thonny serial monitor
+    print("LDR Value:", ldr_value)
+    
+    sleep(0.1)  # Adjust the sleep time as needed
+
