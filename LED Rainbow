@@ -1,3 +1,6 @@
+##### must include neopixel.py file : https://github.com/blaz-r/pi_pico_neopixel
+
+
 import time
 from machine import Pin, ADC
 from neopixel import Neopixel
