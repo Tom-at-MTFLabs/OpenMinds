@@ -1,5 +1,7 @@
 # OpenMinds
-Repo for the OpenMinds Toolkit prototyping board
+This is the code repository for the OpenMinds toolkit.
+
+For a how-to guide, head here: https://github.com/Tom-at-MTFLabs/OpenMinds/blob/main/How%20to%20use.txt
 
 
 ![OpenMindsBoard](https://github.com/Tom-at-MTFLabs/OpenMinds/assets/132015606/89fb9806-1b30-472b-8e1a-9bd47956cfe2)
