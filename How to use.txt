@@ -1,0 +1,12 @@
+The OpenMinds toolkit uses the Raspberry Pi Pico W as its brains. This means that any online tutorial related to this board is also applicable to the open minds toolkit. 
+
+We have pre-loaded the micropython firmware so that it is ready to tinker with and code straight away. If you want to change the firmware to something like Circuitpython, it is easy to do, however, most of the example codes will need to be edited to fit.
+
+You will need an IDE in order to alter the code on the board, we recommend Thonny (https://thonny.org/) all of our tests were done using Thonny so we know it works nicely!
+
+Use a USB cable to connect your toolkit to a computer. You will need to do a little setting up in Thonny by going to Run -> Select Interpreter - In the first drop down menu select MicroPython (Raspberry Pi Pico). The second drop down menu should automatically detect your board, if not then you can do it manually by selecting the port that your board has been plugged into.
+
+From here you can use try some of the example code in this repository, or use the multitude of Pico W tutorials online on how to code your board.
+
+What we have done with this toolkit, is make it easier to attach peripherals to the Pico for quicker, solderless connections. All of the onboard inputs and outputs have been labeleld with their corresponding pins on the pico.
+
